@@ -1,9 +1,123 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title> Jamies very professional website </title>
+<title> Jamie's very professional website </title>
+<style>
+	.backbox
+	{
+		width:100vw;
+		height:100vh;
+		background-color:red;
+		box-sizing:border-box;
+		text-align:center;
+		padding:45vh;
+		background-image:url('TemplateImage.png');
+		background-repeat:no-repeat;
+		background-size: 100% 100%;
+	}
+</style>
 </head>
-<body>
-<img src="TheDegree.png">
+<body style="margin:0;padding:0;" onload="_DrawPoly();">
+<svg id="polybox" style="z-index:1;position:absolute;width:100%;height:100%;">
+</svg>
+<div id="backing" class="backbox" style="z-index:-1">
+<text style="color:black;font-size:25px;z-index:2;"> Jamie's Sweet Portfolio Website</text>
+</div>
 </body>
+
+<script>
+//<polygon id="Alaska_BristolBay" points="5,100 31,68 43,87"/>
+
+var polygons = []; //Stores all indexes active
+var polcounter = 0; //Counts up indexes
+
+var bottom = document.getElementById("backing").offsetHeight;
+var right = document.getElementById("backing").offsetWidth;
+
+function _DrawPoly() //Draws a polygon
+{
+	var polyString = "";
+	var points = _NewPoly();
+	
+	console.log(points);
+	//Find top left pointer
+	//points[0] = "5,100";
+	//points[1] = "31,68";
+	//points[2] = "43,87";
+	
+	polyString += "<polygon id = '" + polcounter + "' points='" + _PrintPoints(points) + "' style='stroke:black;stroke-width:1;'></polygon>";
+	
+	polcounter +=1; //Increase count of polygon Ids
+	polygons.push(polcounter); //Add index to array
+	
+	document.getElementById("polybox").innerHTML = polyString;
+}
+
+function _NewPoly() //Generates a new polygon at the bottom of the page
+{
+	var points = [];
+	var vertexes = 3 + Math.floor(Math.random() * 3); //Random number of vertexes from 3 to 5
+	var variance = 35 + Math.floor(Math.random() * 101);
+	var centerY = Math.floor(Math.random() * bottom);
+	var centerX = Math.floor(Math.random() * right);
+	
+	for(var i = 0; i < vertexes; i++) 
+	{
+		//points[i] = "" + Math.floor(Math.random() * right) + "," + Math.floor(Math.random() * bottom) + "";
+		var pointString = "";
+		
+		var offsetX = Math.floor(Math.random() * variance);
+		var flipX = Math.floor(Math.random() * 2);
+		if(flipX = 0)
+		{
+			pointString += "" + (centerX + offsetX) + ",";
+		}
+		else
+		{
+			pointString += "" + (centerX - offsetX) + ",";
+		}
+		
+		var offsetY = Math.floor(Math.random() * variance);
+		var flipY = Math.floor(Math.random() * 2);
+		
+		//TODO add 0 as min y
+		
+		//Y is offset to be below the svg initially
+		if(flipY = 0)
+		{
+			pointString += "" + (centerY + offsetY + bottom);
+		}
+		else
+		{
+			pointString += "" + (centerY - offsetY + bottom);
+		}
+		
+		points[i] = pointString;
+	}
+	
+	return points;
+}
+
+function _FloatPolygon() //Make polygons float
+{
+	for(polyID in polygons)
+	{
+		
+	}
+}
+
+function _PrintPoints(arrayArg)
+{
+	var output = ""
+	for(index in arrayArg)
+	{
+		output += arrayArg[index] + " ";
+	}
+	
+	console.log(output);
+	
+	return output;
+}
+</script>
+
 </html>
