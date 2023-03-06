@@ -7,7 +7,7 @@
 	{
 		width:100vw;
 		height:100vh;
-		background-color:red;
+		background-color:black;
 		box-sizing:border-box;
 		text-align:center;
 		padding:45vh;
@@ -21,7 +21,7 @@
 <svg id="polybox" style="z-index:1;position:absolute;width:100%;height:100%;">
 </svg>
 <div id="backing" class="backbox" style="z-index:-1">
-<text style="color:black;font-size:25px;z-index:2;"> Jamie's Sweet Portfolio Website</text>
+<text style="color:white;font-size:25px;z-index:2;"> Jamie's Sweet Portfolio Website</text>
 </div>
 </body>
 
@@ -29,12 +29,12 @@
 //<polygon id="Alaska_BristolBay" points="5,100 31,68 43,87"/>
 
 var polygons = []; //Stores all indexes active
-var polcounter = 0; //Counts up indexes
+var polcounter = 1; //Counts up indexes
 
 var bottom = document.getElementById("backing").offsetHeight;
 var right = document.getElementById("backing").offsetWidth;
 
-var t=setInterval(_Run,50);
+var t=setInterval(_Run,60);
 var speed = 10;
 
 function _DrawPoly() //Draws a polygon
@@ -42,10 +42,11 @@ function _DrawPoly() //Draws a polygon
 	var polyString = "";
 	var points = _NewPoly();
 	
-	polyString += "<polygon id = 'pol" + polcounter + "' points='" + _PrintPoints(points) + "' style='stroke:black;stroke-width:1;'></polygon>";
+	polyString += "<polygon id = 'pol" + polcounter + "' points='" + _PrintPoints(points) + "' style='stroke:white;stroke-width:1;'></polygon>";
+	
+	polygons.push(polcounter); //Add index to array
 	
 	polcounter +=1; //Increase count of polygon Ids
-	polygons.push(polcounter); //Add index to array
 	
 	document.getElementById("polybox").innerHTML += polyString;
 }
@@ -97,21 +98,26 @@ function _NewPoly() //Generates a new polygon at the bottom of the page
 
 function _Run() //Repeatedly runs
 {
-	if(polygons.length < 10)
+	if(polygons.length < 11)
 	{
 		_DrawPoly();
 	}
-	
-	_FloatPolygon();
+	else if(polygons.length > 0)
+	{
+		_FloatPolygon();
+	}
 }
 
 function _FloatPolygon() //Make polygons float
 {
-	for(polyID in polygons)
-	{
+	var delIDs = [];
+	var i = 0;
+	
+	for(polyID in polygons) //Iterate through polygons and make them float upwards - removing them when they hit the top of the page
+	{	
 		var newString = "";
 		
-		var points = document.getElementById("pol" + polyID).getAttribute("points");
+		var points = document.getElementById("pol" + polygons[polyID]).getAttribute("points");
 		
 		var delimPoints = points.split(' ');
 		var despawnPoints = delimPoints.length - 1;
@@ -133,18 +139,27 @@ function _FloatPolygon() //Make polygons float
 		
 		if(despawnPoints > 0)
 		{
-			document.getElementById("pol" + polyID).setAttribute("points",newString);
+			document.getElementById("pol" + polygons[polyID]).setAttribute("points",newString);
 		}
 		else
 		{
-		
-			//Delete polygons here
-			
-			
-			//delete polygons[polygons.indexOf(parseInt(polyID))];
+			//Add to delete list
+			delIDs[i] = polygons[polyID];
+			i++;
 
-			//document.getElementById("pol" + polyID).remove();
+		}
+	}
+	
+	if(i > 0)
+	{
+		for(id in delIDs) //Delete polygons in list of ids to delete
+		{
 
+			delete polygons[polygons.indexOf(parseInt(delIDs[id]))]; //This leaves an empty index space - hence the filter below.
+
+			document.getElementById("pol" + delIDs[id]).remove();
+			
+			polygons = polygons.filter(n => n); //Not cost effective but simple solution - im too tired to fix this at the moment
 		}
 	}
 }
