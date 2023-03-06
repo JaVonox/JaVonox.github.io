@@ -44,7 +44,7 @@ function _DrawPoly() //Draws a polygon
 	
 	polyString += "<polygon id = 'pol" + polcounter + "' points='" + _PrintPoints(points) + "' style='stroke:white;stroke-width:1;'></polygon>";
 	
-	polygons.push(polcounter); //Add index to array
+	polygons.push({'id':polcounter,'speed': 3 + Math.floor(Math.random() * 7)}); //Add index to array
 	
 	polcounter +=1; //Increase count of polygon Ids
 	
@@ -117,7 +117,7 @@ function _FloatPolygon() //Make polygons float
 	{	
 		var newString = "";
 		
-		var points = document.getElementById("pol" + polygons[polyID]).getAttribute("points");
+		var points = document.getElementById("pol" + polygons[polyID].id).getAttribute("points");
 		
 		var delimPoints = points.split(' ');
 		var despawnPoints = delimPoints.length - 1;
@@ -127,8 +127,8 @@ function _FloatPolygon() //Make polygons float
 			if(delimPoints[pointIndex] != "")
 			{
 				var pos = delimPoints[pointIndex].split(',');
-				var newY = parseInt(pos[1]) - speed;
-				newString += pos[0] + "," + (parseInt(pos[1]) - speed) + " ";
+				var newY = parseInt(pos[1]) - polygons[polyID].speed;
+				newString += pos[0] + "," + (parseInt(pos[1]) - polygons[polyID].speed) + " ";
 				
 				if(newY < -100)
 				{
@@ -139,12 +139,12 @@ function _FloatPolygon() //Make polygons float
 		
 		if(despawnPoints > 0)
 		{
-			document.getElementById("pol" + polygons[polyID]).setAttribute("points",newString);
+			document.getElementById("pol" + polygons[polyID].id).setAttribute("points",newString);
 		}
 		else
 		{
 			//Add to delete list
-			delIDs[i] = polygons[polyID];
+			delIDs[i] = polygons[polyID].id;
 			i++;
 
 		}
@@ -154,12 +154,11 @@ function _FloatPolygon() //Make polygons float
 	{
 		for(id in delIDs) //Delete polygons in list of ids to delete
 		{
-
-			delete polygons[polygons.indexOf(parseInt(delIDs[id]))]; //This leaves an empty index space - hence the filter below.
-
 			document.getElementById("pol" + delIDs[id]).remove();
 			
-			polygons = polygons.filter(n => n); //Not cost effective but simple solution - im too tired to fix this at the moment
+			//delete polygons[polygons.indexOf(parseInt(delIDs[id]))]; //This leaves an empty index space - hence the filter below.
+			
+			polygons = polygons.filter(n => n.id != delIDs[id]); //Not cost effective but simple solution - im too tired to fix this at the moment
 		}
 	}
 }
