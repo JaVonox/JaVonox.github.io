@@ -3,7 +3,65 @@
 <head>
 <title> Jamie Gorman's Portfolio - Main Page </title>
 </head>
-<body>
-Luigi Gubello why'd you have to go find that exploit and make me making my portfolio website so much harder
+<style>
+	html
+	{
+		background-image:url('TemplateImage.png');
+		background-attachment:fixed;
+	}
+	.midbox
+	{
+		background-color:white;
+		box-sizing:border-box;
+		text-align:center;
+		width:40vw;
+		margin:auto;
+		padding-left:50px;
+		padding-right:50px;
+	}
+</style>
+<body style="margin:0;padding:0;">
+<div class="midbox">
+<h1>Who am I?</h1>
+<img src="JamieGorman.png" style="width:160px;height:160px;"/>
+<br><br>
+Hey, my name is Jamie Gorman, I'm a software developer from Birmingham, England. I've been interested in software development since I was a child, starting with actionscript as my first language at the age of 12.
+Nowadays, I prefer to use languages like C# and python, but I pride myself on my ability to work with any language. I Recently completed my bachelors degree in computer science, resulting in a first class honours and two additional awards.
+In my free time, I like to make my own games and simulations, some of which are listed below!
+<h1>Projects Overview</h1>
+<h2>Juris-Civilis</h2>
+<img src="JurisCivilisPreview.png" style="height:320px;width:480px;"/>
+<br><br>
+Juris-Civilis set out with the goal to create a world history simulation - mapping the growth of nations, technology, religions and more. While the scope of the project started small,
+it eventually evolved into a huge undertaking - taking the better part of a year to complete to my satisfaction. The software, written entirely in C# using the unity engine, is able to create randomly generated worlds, each with their own
+climate which determine the future of the inhabitants of the world. 
+<br><br>
+<button onclick="location.href='index.html'" style="position:relative;"> See More </button>
+<h2>Tauresium</h2>
+<img src="TauresiumPreview.png" style="height:320px;width:480px;"/>
+<br><br>
+The namesake for this website, the tauresium project was an exploration into php and javascript - two languages I had been unfamiliar with at the start of development. Tauresium was intended as a multiplayer browser game - inwhich
+up to five players could participate in building their own countries and conquering land - either as a cooperative endeavour or as a competitive battlefield. The nations under the control of the players - defined with custom names, colours,
+and systems of government, were able to expand their territory by using different forms of influence - diplomatic, economic and military - each generated based on the form of governance and responses of players to different questions they would
+recieve throughout the session. 
+<br><br>
+<button onclick="location.href='index.html'" style="position:relative;"> See More </button>
+<h2>:C</h2>
+<img src="ColonCPreview.png" style="height:320px;width:480px;"/>
+<br><br>
+Without a doubt one of the most technically complex projects I've worked on - :c (pronounced colon c) is a simple interpreted language of my own design. The language, which supports a range of basic functions such as iterative and selective
+functions, as well as the ability to define a custom function, is designed as a simple and lightweight language. The interpreter itself makes up less than 200kb, and uses simple text files as inputs. This project is arguably the easiest to set up
+and run.
+<br><br>
+<button onclick="location.href='index.html'" style="position:relative;"> See More </button>
+<h2>Bankbot</h2>
+<img src="AIPreview.png" style="height:320px;width:680px;height:58px;"/>
+<br><br>
+An exploration into machine learning and data analysis, Bankbot is a simple AI chatbot that categorises questions based on different tags relating to finance - providing an automated template response telling a user where to contact for answers
+to their query. The AI uses a relatively small dataset (though it is built to accept and work with other datasets) composed of 500 stack overflow finance questions - downloaded using the stackoverflow API. A portion of these are then used as
+training data, and some as testing data. When finished, the bot often reports around a 75% success rate on matching topics using the default method - though other algorithms can be enabled in the source code.
+<br><br>
+<button onclick="location.href='index.html'" style="position:relative;"> See More </button>
+</div>
 </body>
 </html>
