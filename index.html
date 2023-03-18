@@ -21,9 +21,9 @@
 <svg id="polybox" style="z-index:2;position:absolute;width:100%;height:100%;">
 </svg>
 <div id="backing" class="backbox" style="">
-<text style="color:white;font-size:25px;"> Jamie's Sweet Portfolio Website</text>
+<text style="color:white;font-size:25px;"> Jamie Gorman's Portfolio </text>
 <br><br>
-<button onclick="location.href='portfoliomain.html'" style="z-index:3;position:relative;"> Check out my stuff </button>
+<button onclick="location.href='portfoliomain.html'" style="z-index:3;position:relative;"> My Work </button>
 </div>
 </body>
 
@@ -158,9 +158,7 @@ function _FloatPolygon() //Make polygons float
 		{
 			document.getElementById("pol" + delIDs[id]).remove();
 			
-			//delete polygons[polygons.indexOf(parseInt(delIDs[id]))]; //This leaves an empty index space - hence the filter below.
-			
-			polygons = polygons.filter(n => n.id != delIDs[id]); //Not cost effective but simple solution - im too tired to fix this at the moment
+			polygons = polygons.filter(n => n.id != delIDs[id]); //Filter out deleted IDs
 		}
 	}
 }
