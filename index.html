@@ -21,14 +21,13 @@
 <svg id="polybox" style="z-index:2;position:absolute;width:100%;height:100%;">
 </svg>
 <div id="backing" class="backbox" style="">
-<text style="color:white;font-size:25px;"> Jamie Gorman's Portfolio </text>
+<text style="color:white;font-size:48px;"> Jamie Gorman's Portfolio </text>
 <br><br>
-<button onclick="location.href='portfoliomain.html'" style="z-index:3;position:relative;"> My Work </button>
+<button onclick="location.href='portfoliomain.html'" style="z-index:3;position:relative;font-size:32px;"> My Projects </button>
 </div>
 </body>
 
 <script>
-//location.href='https://google.com'
 
 var polygons = []; //Stores all indexes active
 var polcounter = 1; //Counts up indexes
@@ -39,6 +38,24 @@ var right = document.getElementById("backing").offsetWidth;
 var t=setInterval(_Run,60);
 var speed = 10;
 var started = false; //Checks if this is the first run of the system
+
+function pointsType(xN,yN){ //Point reference type - points stored as x and y values
+	this.x = xN;
+	this.y = yN;
+}
+
+//document.getElementById("polybox").innerHTML += "<circle id='mousePoly' cx='0' cy='0' r='30' style='stroke:white;stroke-width:1;'/>";
+//document.onmousemove = _HandleMouseMove; //Mouse movement handler
+
+//function _HandleMouseMove(e)
+//{
+//	var mPos = new pointsType(e.clientX,e.clientY);
+	
+//	document.getElementById("mousePoly").setAttribute("cx",mPos.x);
+//	document.getElementById("mousePoly").setAttribute("cy",mPos.y);
+//	document.getElementById("mousePoly").setAttribute("r","0"); //Temporary measure to make the circle invisible. Will be used more later. default 30.
+//}
+
 
 function _DrawPoly() //Draws a polygon
 {
@@ -57,6 +74,8 @@ function _DrawPoly() //Draws a polygon
 function _NewPoly() //Generates a new polygon at the bottom of the page
 {
 	var points = [];
+	var pointObj = [];
+	
 	var vertexes = 3 + Math.floor(Math.random() * 3); //Random number of vertexes from 3 to 5
 	var variance = 35 + Math.floor(Math.random() * 101);
 	var centerY = Math.floor(Math.random() * bottom);
@@ -69,40 +88,47 @@ function _NewPoly() //Generates a new polygon at the bottom of the page
 	
 	for(var i = 0; i < vertexes; i++) 
 	{
-		//points[i] = "" + Math.floor(Math.random() * right) + "," + Math.floor(Math.random() * bottom) + "";
-		var pointString = "";
+		
+		pointObj[i] = new pointsType(0,0);
 		
 		var offsetX = Math.floor(Math.random() * variance);
 		var flipX = Math.floor(Math.random() * 2);
 		if(flipX = 0)
 		{
-			pointString += "" + (centerX + offsetX) + ",";
+			pointObj[i].x =(centerX + offsetX);
 		}
 		else
 		{
-			pointString += "" + (centerX - offsetX) + ",";
+			pointObj[i].x = (centerX - offsetX);
 		}
 		
 		var offsetY = Math.floor(Math.random() * variance);
 		var flipY = Math.floor(Math.random() * 2);
 		
-		//TODO add 0 as min y
-		
-		//Y is offset to be below the svg initially
 		if(flipY = 0)
 		{
-			pointString += "" + (centerY + offsetY + bottom);
+			pointObj[i].y = (centerY + offsetY + bottom);
 		}
 		else
 		{
-			pointString += "" + (centerY - offsetY + bottom);
+			pointObj[i].y = (centerY - offsetY + bottom);
 		}
 		
-		points[i] = pointString;
+	}
+
+	return _TurnToStringArr(pointObj);
+}
+
+function _TurnToStringArr(pointsObjArg) //Turns the points object into a string array to be used by the html script
+{
+	var strArray = [];
+	for(let i = 0;i < pointsObjArg.length;i++)
+	{
+		strArray[i] = pointsObjArg[i].x + "," + pointsObjArg[i].y;
 	}
 	
-	return points;
-}
+	return strArray;
+};
 
 function _Run() //Repeatedly runs
 {
@@ -191,10 +217,6 @@ function _PrintPoints(arrayArg)
 	return output;
 }
 
-function _ButtonInteract()
-{
-	console.log("oops");
-}
 </script>
 
 </html>
