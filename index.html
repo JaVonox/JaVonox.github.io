@@ -38,6 +38,7 @@ var right = document.getElementById("backing").offsetWidth;
 
 var t=setInterval(_Run,60);
 var speed = 10;
+var started = false; //Checks if this is the first run of the system
 
 function _DrawPoly() //Draws a polygon
 {
@@ -60,6 +61,11 @@ function _NewPoly() //Generates a new polygon at the bottom of the page
 	var variance = 35 + Math.floor(Math.random() * 101);
 	var centerY = Math.floor(Math.random() * bottom);
 	var centerX = Math.floor(Math.random() * right);
+	
+	if(started == false)
+	{
+		centerY -= Math.floor(Math.random() * (bottom / 2));
+	}
 	
 	for(var i = 0; i < vertexes; i++) 
 	{
@@ -102,7 +108,18 @@ function _Run() //Repeatedly runs
 {
 	if(polygons.length < 11)
 	{
-		_DrawPoly();
+		if(started == false) //Initial polygons
+		{
+			for(let i = 0; i < 6;i++)
+			{
+				_DrawPoly();
+			}
+			started = true;
+		}
+		else
+		{
+			_DrawPoly();
+		}
 	}
 	else if(polygons.length > 0)
 	{
