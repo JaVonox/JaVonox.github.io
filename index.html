@@ -35,8 +35,8 @@ var polcounter = 1; //Counts up indexes
 var bottom = document.getElementById("backing").offsetHeight;
 var right = document.getElementById("backing").offsetWidth;
 
-var t=setInterval(_Run,60);
-var speed = 10;
+var t=setInterval(_Run,60); //Run every 60ms
+
 var started = false; //Checks if this is the first run of the system
 
 function pointsType(xN,yN){ //Point reference type - points stored as x and y values
@@ -75,7 +75,7 @@ function _LineToClosestPoly() //Draws a line from the mouse to the closest polyg
 	{
 		for(pIndex in polygons[index].points)
 		{
-			var tDist = Math.sqrt(Math.pow(polygons[index].points[pIndex].x - mPos.x,2) + Math.pow(polygons[index].points[pIndex].y - mPos.y,2));
+			var tDist = Math.sqrt(Math.pow(polygons[index].points[pIndex].x - mPos.x,2) + Math.pow(polygons[index].points[pIndex].y - mPos.y,2)); //Distance formula
 			if(tDist < closestPoly.dist || closestPoly.dist == -1)
 			{
 				closestPoly.dist = tDist;
@@ -93,6 +93,23 @@ function _LineToClosestPoly() //Draws a line from the mouse to the closest polyg
 	
 };
 
+function _MovePolygons() //Move polygons based on distance towards mouse cursor
+{
+	for(index in polygons)
+	{
+		for(pIndex in polygons[index].points)
+		{
+			var tDist = Math.sqrt(Math.pow(polygons[index].points[pIndex].x - mPos.x,2) + Math.pow(polygons[index].points[pIndex].y - mPos.y,2));
+			if(tDist < 30) //If polygon is close enough to mouse
+			{
+				//Find incident angle
+				let incAngle = Math.atan2( polygons[index].points[pIndex].y - mPos.y, polygons[index].points[pIndex].x - mPos.x) * ( 180 / Math.PI );
+				
+			}
+		}
+	}
+	
+};
 
 function _DrawPoly() //Draws a polygon
 {
@@ -191,7 +208,8 @@ function _Run() //Repeatedly runs
 	
 	if(polygons.length > 0) //Line to closest polygon TODO switch to invisible line with movement on polygons based on incident angle
 	{
-		_LineToClosestPoly();
+		//_LineToClosestPoly();
+		_MovePolygons();
 	}
 }
 
@@ -208,9 +226,8 @@ function _FloatPolygon() //Make polygons float
 		
 		for(var pointIndex in polygons[polyID].points)
 		{
-			var newY = parseInt(polygons[polyID].points[pointIndex].y) - polygons[polyID].speed; //Calculate new Y value
+			var newY = polygons[polyID].points[pointIndex].y - polygons[polyID].speed; //Calculate new Y value
 			polygons[polyID].points[pointIndex].y = newY;
-			newString += polygons[polyID].points[pointIndex].x + "," + (polygons[polyID].points[pointIndex].y) + " ";
 			
 			
 			if(newY < -100)
@@ -221,11 +238,10 @@ function _FloatPolygon() //Make polygons float
 		
 		if(despawnPoints > 0)
 		{	
-			document.getElementById("pol" + polygons[polyID].id).setAttribute("points",newString);
+			_UpdatePolygonSVG(polyID);
 		}
 		else
 		{
-			console.log("DELETE");
 			//Add to delete list
 			delIDs[i] = polygons[polyID].id;
 			i++;
@@ -242,6 +258,18 @@ function _FloatPolygon() //Make polygons float
 			polygons = polygons.filter(n => n.id != delIDs[id]); //Filter out deleted IDs
 		}
 	}
+}
+
+function _UpdatePolygonSVG(polyID)
+{
+	var newString = ""; //Html points string
+	
+	for(pIndex in polygons[polyID].points)
+	{
+		newString += polygons[polyID].points[pIndex].x + "," + (polygons[polyID].points[pIndex].y) + " ";
+	}
+	
+	document.getElementById("pol" + polygons[polyID].id).setAttribute("points",newString);
 }
 
 function _PrintPoints(arrayArg)
