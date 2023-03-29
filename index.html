@@ -44,17 +44,54 @@ function pointsType(xN,yN){ //Point reference type - points stored as x and y va
 	this.y = yN;
 }
 
-//document.getElementById("polybox").innerHTML += "<circle id='mousePoly' cx='0' cy='0' r='30' style='stroke:white;stroke-width:1;'/>";
-//document.onmousemove = _HandleMouseMove; //Mouse movement handler
+function polyType(nID,nSpeed,nPoints){
+	this.id = nID;
+	this.speed = nSpeed;
+	this.points = nPoints;
+};
 
-//function _HandleMouseMove(e)
-//{
-//	var mPos = new pointsType(e.clientX,e.clientY);
+var mPos = new pointsType(0,0);
+
+document.getElementById("polybox").innerHTML += "<circle id='mousePoly' cx='0' cy='0' r='30' style='stroke:white;stroke-width:1;'/>";
+document.getElementById("polybox").innerHTML += "<line id='closestPoly'  x1='0' y1='0' x2='0' y2='0' style='stroke:green;stroke-width:1;'/>";
+document.onmousemove = _HandleMouseMove; //Mouse movement handler
+
+
+function _HandleMouseMove(e)
+{
+	mPos.x = e.clientX;
+	mPos.y = e.clientY;
 	
-//	document.getElementById("mousePoly").setAttribute("cx",mPos.x);
-//	document.getElementById("mousePoly").setAttribute("cy",mPos.y);
-//	document.getElementById("mousePoly").setAttribute("r","0"); //Temporary measure to make the circle invisible. Will be used more later. default 30.
-//}
+	document.getElementById("mousePoly").setAttribute("cx",mPos.x);
+	document.getElementById("mousePoly").setAttribute("cy",mPos.y);
+	document.getElementById("mousePoly").setAttribute("r","0"); //Temporary measure to make the circle invisible. Will be used more later. default 30.
+}
+
+function _LineToClosestPoly() //Draws a line from the mouse to the closest polygon
+{
+	var closestPoly = {'x':-1,'y':-1,'dist':-1};
+	
+	for(index in polygons)
+	{
+		for(pIndex in polygons[index].points)
+		{
+			var tDist = Math.sqrt(Math.pow(polygons[index].points[pIndex].x - mPos.x,2) + Math.pow(polygons[index].points[pIndex].y - mPos.y,2));
+			if(tDist < closestPoly.dist || closestPoly.dist == -1)
+			{
+				closestPoly.dist = tDist;
+				closestPoly.x = polygons[index].points[pIndex].x;
+				closestPoly.y = polygons[index].points[pIndex].y;
+			}
+		}
+	}
+	
+	document.getElementById("closestPoly").setAttribute("x1",mPos.x);
+	document.getElementById("closestPoly").setAttribute("y1",mPos.y);
+	
+	document.getElementById("closestPoly").setAttribute("x2",closestPoly.x);
+	document.getElementById("closestPoly").setAttribute("y2",closestPoly.y);
+	
+};
 
 
 function _DrawPoly() //Draws a polygon
@@ -62,9 +99,9 @@ function _DrawPoly() //Draws a polygon
 	var polyString = "";
 	var points = _NewPoly();
 	
-	polyString += "<polygon id = 'pol" + polcounter + "' points='" + _PrintPoints(points) + "' style='stroke:white;stroke-width:1;'></polygon>";
+	polyString += "<polygon id = 'pol" + polcounter + "' points='" + _PrintPoints(_TurnToStringArr(points)) + "' style='stroke:white;stroke-width:1;'></polygon>";
 	
-	polygons.push({'id':polcounter,'speed': 3 + Math.floor(Math.random() * 7)}); //Add index to array
+	polygons.push(new polyType(polcounter,(3 + Math.floor(Math.random() * 7)),points)); //Add index to array
 	
 	polcounter +=1; //Increase count of polygon Ids
 	
@@ -116,7 +153,7 @@ function _NewPoly() //Generates a new polygon at the bottom of the page
 		
 	}
 
-	return _TurnToStringArr(pointObj);
+	return pointObj;
 }
 
 function _TurnToStringArr(pointsObjArg) //Turns the points object into a string array to be used by the html script
@@ -151,6 +188,11 @@ function _Run() //Repeatedly runs
 	{
 		_FloatPolygon();
 	}
+	
+	if(polygons.length > 0) //Line to closest polygon TODO switch to invisible line with movement on polygons based on incident angle
+	{
+		_LineToClosestPoly();
+	}
 }
 
 function _FloatPolygon() //Make polygons float
@@ -162,32 +204,28 @@ function _FloatPolygon() //Make polygons float
 	{	
 		var newString = "";
 		
-		var points = document.getElementById("pol" + polygons[polyID].id).getAttribute("points");
+		var despawnPoints = polygons[polyID].points.length - 1;
 		
-		var delimPoints = points.split(' ');
-		var despawnPoints = delimPoints.length - 1;
-		
-		for(var pointIndex in delimPoints)
+		for(var pointIndex in polygons[polyID].points)
 		{
-			if(delimPoints[pointIndex] != "")
+			var newY = parseInt(polygons[polyID].points[pointIndex].y) - polygons[polyID].speed; //Calculate new Y value
+			polygons[polyID].points[pointIndex].y = newY;
+			newString += polygons[polyID].points[pointIndex].x + "," + (polygons[polyID].points[pointIndex].y) + " ";
+			
+			
+			if(newY < -100)
 			{
-				var pos = delimPoints[pointIndex].split(',');
-				var newY = parseInt(pos[1]) - polygons[polyID].speed;
-				newString += pos[0] + "," + (parseInt(pos[1]) - polygons[polyID].speed) + " ";
-				
-				if(newY < -100)
-				{
-					despawnPoints--; //Counts up how many points are above a line. if too many points have exited the screen area despawn the polygon
-				}
+				despawnPoints--; //Counts up how many points are above a line. if too many points have exited the screen area despawn the polygon
 			}
 		}
 		
 		if(despawnPoints > 0)
-		{
+		{	
 			document.getElementById("pol" + polygons[polyID].id).setAttribute("points",newString);
 		}
 		else
 		{
+			console.log("DELETE");
 			//Add to delete list
 			delIDs[i] = polygons[polyID].id;
 			i++;
