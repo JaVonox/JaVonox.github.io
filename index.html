@@ -97,14 +97,32 @@ function _MovePolygons() //Move polygons based on distance towards mouse cursor
 {
 	for(index in polygons)
 	{
+		var willMove = false;
+		
 		for(pIndex in polygons[index].points)
 		{
 			var tDist = Math.sqrt(Math.pow(polygons[index].points[pIndex].x - mPos.x,2) + Math.pow(polygons[index].points[pIndex].y - mPos.y,2));
-			if(tDist < 30) //If polygon is close enough to mouse
+			if(tDist < 50) //If polygon is close enough to mouse
 			{
-				//Find incident angle
-				let incAngle = Math.atan2( polygons[index].points[pIndex].y - mPos.y, polygons[index].points[pIndex].x - mPos.x) * ( 180 / Math.PI );
+				willMove = true; //Set to true
+				break;
+			}
+		}
+		
+		if(willMove) //If close enough to require a movement
+		{
+			//Find incident angle to center
+			let cX = polygons[index].points.reduce((total,i) => i.x + total,0) / parseFloat(polygons[index].points.length);
+			let cY = polygons[index].points.reduce((total,i) => i.y + total,0) / parseFloat(polygons[index].points.length);
+			
+			let incAngle = Math.atan2( cY - mPos.y, cX - mPos.x);
+			
+			for(pIndex in polygons[index].points)
+			{		
+				polygons[index].points[pIndex].x += 10 * Math.cos(incAngle);
+				polygons[index].points[pIndex].y += 10 * Math.sin(incAngle);
 				
+				_UpdatePolygonSVG(index);
 			}
 		}
 	}
