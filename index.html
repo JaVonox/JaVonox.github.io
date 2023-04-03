@@ -16,6 +16,7 @@
 		background-size: 100% 100%;
 	}
 </style>
+<script src="Scripts/vector.js"></script>
 </head>
 <body style="margin:0;padding:0;">
 <svg id="polybox" style="z-index:2;position:absolute;width:100%;height:100%;">
@@ -39,6 +40,8 @@ var t=setInterval(_Run,60); //Run every 60ms
 
 var started = false; //Checks if this is the first run of the system
 
+
+//TODO maybe switch pointsType to just use vector type? this type was added before vector math was even a concern
 function pointsType(xN,yN){ //Point reference type - points stored as x and y values
 	this.x = xN;
 	this.y = yN;
@@ -50,9 +53,8 @@ function polyType(nID,nSpeed,nPoints){
 	this.points = nPoints;
 };
 
-var mPos = new pointsType(0,0);
+var mPos = new pointsType();
 
-document.getElementById("polybox").innerHTML += "<circle id='mousePoly' cx='0' cy='0' r='30' style='stroke:white;stroke-width:1;'/>";
 document.getElementById("polybox").innerHTML += "<line id='closestPoly'  x1='0' y1='0' x2='0' y2='0' style='stroke:green;stroke-width:1;'/>";
 document.onmousemove = _HandleMouseMove; //Mouse movement handler
 
@@ -61,10 +63,6 @@ function _HandleMouseMove(e)
 {
 	mPos.x = e.clientX;
 	mPos.y = e.clientY;
-	
-	document.getElementById("mousePoly").setAttribute("cx",mPos.x);
-	document.getElementById("mousePoly").setAttribute("cy",mPos.y);
-	document.getElementById("mousePoly").setAttribute("r","0"); //Temporary measure to make the circle invisible. Will be used more later. default 30.
 }
 
 function _LineToClosestPoly() //Draws a line from the mouse to the closest polygon
@@ -148,7 +146,7 @@ function _NewPoly() //Generates a new polygon at the bottom of the page
 	var points = [];
 	var pointObj = [];
 	
-	var vertexes = 3 + Math.floor(Math.random() * 3); //Random number of vertexes from 3 to 5
+	var vertexes = 6 + Math.floor(Math.random() * 3); //Random number of vertexes from 6 to 9
 	var variance = 35 + Math.floor(Math.random() * 101);
 	var centerY = Math.floor(Math.random() * bottom);
 	var centerX = Math.floor(Math.random() * right);
@@ -187,6 +185,8 @@ function _NewPoly() //Generates a new polygon at the bottom of the page
 		}
 		
 	}
+	
+	pointObj = _ConvexHullReorder(pointObj); //Reorder in convex hull position - making the polygons more rounded
 
 	return pointObj;
 }
@@ -204,7 +204,7 @@ function _TurnToStringArr(pointsObjArg) //Turns the points object into a string 
 
 function _Run() //Repeatedly runs
 {
-	if(polygons.length < 11)
+	if(polygons.length < 13)
 	{
 		if(started == false) //Initial polygons
 		{
@@ -301,6 +301,57 @@ function _PrintPoints(arrayArg)
 	return output;
 }
 
+function _ConvexHullReorder(points) //Takes in a list of point types and returns them in convex hull order
+{
+	var hullList = []; //Ordered list of the outer points in the polygon
+	
+	var xList = Object.keys(points).map(function(key){return points[key].x}); //List of all X values in the points - retains index of original points array 
+	var leftmostID = xList.indexOf(Math.min.apply(Math,Object.keys(points).map(function(key){return points[key].x})));
+	var switchPoint = points[0]; //Store current point 0 to switch it with leftmost point 
+	
+
+	points[0] = points[leftmostID];
+	points[leftmostID] = switchPoint;
+	
+	hullList.push(points[0])
+	
+	var curPoint = points[0];
+	var nextPoint = points[1]; //Select a new point to test against
+	var iter = 2; //Where to start the hull search
+	var nextIndex = -1;
+	
+	while(true) //Gift wrapping algorithm - sourced from https://editor.p5js.org/codingtrain/sketches/IVE9CxBOF
+	{
+		var checkingPoint = points[iter];
+		var a = Vector.sub(new Vector(nextPoint.x,nextPoint.y),new Vector(curPoint.x,curPoint.y));
+		var b = Vector.sub(new Vector(checkingPoint.x,checkingPoint.y), new Vector(curPoint.x,curPoint.y));
+		var cross = a.cross(b); 
+		
+		if(cross.z < 0)
+		{
+			nextPoint = checkingPoint;
+			nextIndex = iter;
+		}
+		
+		iter = iter + 1;
+		if(iter == points.length)
+		{
+			if(nextPoint == points[0])
+			{
+				break;
+			}
+			else
+			{
+				hullList.push(nextPoint);
+				curPoint = nextPoint;
+				iter = 0;
+				nextPoint = points[0];
+			}
+		}
+	};
+	
+	return hullList;
+}
 </script>
 
 </html>
