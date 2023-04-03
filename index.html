@@ -33,8 +33,8 @@
 var polygons = []; //Stores all indexes active
 var polcounter = 1; //Counts up indexes
 
-var bottom = document.getElementById("backing").offsetHeight;
-var right = document.getElementById("backing").offsetWidth;
+const bottom = document.getElementById("backing").offsetHeight;
+const right = document.getElementById("backing").offsetWidth;
 
 var t=setInterval(_Run,60); //Run every 60ms
 
@@ -47,9 +47,10 @@ function pointsType(xN,yN){ //Point reference type - points stored as x and y va
 	this.y = yN;
 }
 
-function polyType(nID,nSpeed,nPoints){
+function polyType(nID,nXSpeed,nYspeed,nPoints){
 	this.id = nID;
-	this.speed = nSpeed;
+	this.Xspeed = nXSpeed;
+	this.Yspeed = nYspeed;
 	this.points = nPoints;
 };
 
@@ -91,7 +92,7 @@ function _LineToClosestPoly() //Draws a line from the mouse to the closest polyg
 	
 };
 
-function _MovePolygons() //Move polygons based on distance towards mouse cursor
+function _MovePolygons() //Move polygons away from mouse cursor
 {
 	for(index in polygons)
 	{
@@ -116,10 +117,15 @@ function _MovePolygons() //Move polygons based on distance towards mouse cursor
 			let incAngle = Math.atan2( cY - mPos.y, cX - mPos.x);
 			
 			for(pIndex in polygons[index].points)
-			{		
-				polygons[index].points[pIndex].x += 10 * Math.cos(incAngle);
-				polygons[index].points[pIndex].y += 10 * Math.sin(incAngle);
+			{	
+				//Direct movement
+				polygons[index].points[pIndex].x += 3 * Math.cos(incAngle);
+				polygons[index].points[pIndex].y += 3 * Math.sin(incAngle);
 				
+				//Change speed to account for momentum
+				polygons[index].Xspeed = 5 * Math.cos(incAngle);
+				polygons[index].Yspeed = 5 * Math.sin(incAngle);
+
 				_UpdatePolygonSVG(index);
 			}
 		}
@@ -134,26 +140,26 @@ function _DrawPoly() //Draws a polygon
 	
 	polyString += "<polygon id = 'pol" + polcounter + "' points='" + _PrintPoints(_TurnToStringArr(points)) + "' style='stroke:white;stroke-width:1;'></polygon>";
 	
-	polygons.push(new polyType(polcounter,(3 + Math.floor(Math.random() * 7)),points)); //Add index to array
+	polygons.push(new polyType(polcounter,(-2 + (Math.random() * 5)),(-2 + (Math.random() * 5)),points)); //Add index to array
 	
 	polcounter +=1; //Increase count of polygon Ids
 	
 	document.getElementById("polybox").innerHTML += polyString;
 }
 
-function _NewPoly() //Generates a new polygon at the bottom of the page
+function _NewPoly() //Generates a new polygon somewhere on the page
 {
 	var points = [];
 	var pointObj = [];
 	
-	var vertexes = 6 + Math.floor(Math.random() * 3); //Random number of vertexes from 6 to 9
+	var vertexes = 6 + Math.floor(Math.random() * 3); //Random number of vertexes min 6
 	var variance = 35 + Math.floor(Math.random() * 101);
-	var centerY = Math.floor(Math.random() * bottom);
-	var centerX = Math.floor(Math.random() * right);
+	var centerY = -100 + Math.floor(Math.random() * bottom);
+	var centerX = -100 + Math.floor(Math.random() * right);
 	
 	if(started == false)
 	{
-		centerY -= Math.floor(Math.random() * (bottom / 2));
+		centerY -= Math.floor(Math.random() * (bottom)); //Formerly divided by 2 to start in the bottom half
 	}
 	
 	for(var i = 0; i < vertexes; i++) 
@@ -204,11 +210,11 @@ function _TurnToStringArr(pointsObjArg) //Turns the points object into a string 
 
 function _Run() //Repeatedly runs
 {
-	if(polygons.length < 13)
+	if(polygons.length < 51)
 	{
 		if(started == false) //Initial polygons
 		{
-			for(let i = 0; i < 6;i++)
+			for(let i = 0; i < 51;i++)
 			{
 				_DrawPoly();
 			}
@@ -218,6 +224,7 @@ function _Run() //Repeatedly runs
 		{
 			_DrawPoly();
 		}
+		
 	}
 	else if(polygons.length > 0)
 	{
@@ -231,51 +238,55 @@ function _Run() //Repeatedly runs
 	}
 }
 
-function _FloatPolygon() //Make polygons float
+function _FloatPolygon() //Make polygons around the page
 {
-	var delIDs = [];
+	//var delIDs = [];
 	var i = 0;
 	
 	for(polyID in polygons) //Iterate through polygons and make them float upwards - removing them when they hit the top of the page
 	{	
 		var newString = "";
 		
-		var despawnPoints = polygons[polyID].points.length - 1;
+		//var despawnPoints = polygons[polyID].points.length - 1;
 		
 		for(var pointIndex in polygons[polyID].points)
 		{
-			var newY = polygons[polyID].points[pointIndex].y - polygons[polyID].speed; //Calculate new Y value
+			var newX = polygons[polyID].points[pointIndex].x + polygons[polyID].Xspeed; //Calculate new X value
+			var newY = polygons[polyID].points[pointIndex].y + polygons[polyID].Yspeed; //Calculate new Y value
+			
+			polygons[polyID].points[pointIndex].x = newX;
 			polygons[polyID].points[pointIndex].y = newY;
 			
-			
-			if(newY < -100)
-			{
-				despawnPoints--; //Counts up how many points are above a line. if too many points have exited the screen area despawn the polygon
-			}
+			//if(newY < -100) //|| newY > bottom + 100 || newX < - 100 || newX > right + 100)
+			//{
+			//	despawnPoints--; //Counts up how many points are above a line. if too many points have exited the screen area despawn the polygon
+			//}
 		}
 		
-		if(despawnPoints > 0)
-		{	
-			_UpdatePolygonSVG(polyID);
-		}
-		else
-		{
+		_UpdatePolygonSVG(polyID);
+		
+		//if(despawnPoints > 0)
+		//{	
+		//	_UpdatePolygonSVG(polyID);
+		//}
+		//else
+		//{
 			//Add to delete list
-			delIDs[i] = polygons[polyID].id;
-			i++;
+			//delIDs[i] = polygons[polyID].id;
+			//i++;
 
-		}
+		//}
 	}
 	
-	if(i > 0)
-	{
-		for(id in delIDs) //Delete polygons in list of ids to delete
-		{
-			document.getElementById("pol" + delIDs[id]).remove();
-			
-			polygons = polygons.filter(n => n.id != delIDs[id]); //Filter out deleted IDs
-		}
-	}
+	//if(i > 0)
+	//{
+	//	for(id in delIDs) //Delete polygons in list of ids to delete
+	//	{
+	//		document.getElementById("pol" + delIDs[id]).remove();
+	//		
+	//		polygons = polygons.filter(n => n.id != delIDs[id]); //Filter out deleted IDs
+	//	}
+	//}
 }
 
 function _UpdatePolygonSVG(polyID)
