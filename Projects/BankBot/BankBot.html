@@ -33,10 +33,9 @@
 </div>
 </div>
 <br>
-BankBot is a python-based machine learning algorithm designed to categorise and respond to questions relating to finance. Using spacy as a framework, the software parses and categorises an english language input into one of seven topics - using
-stack overflow questions and their respective tags as training data. When tested on said training data with a 70/30 split, the software consistently reported a 60-70% accuracy rate, with its second guess having a 20% accuracy rate.
-The software is designed to be extendable - allowing the training data, categories, responses and algorithms to be modified with some small changes to the files and or scripts. For this reason, the codebase is designed to be simple and legible, 
-allowing for easy modification.
+An exploration into machine learning and data analysis, Bankbot is a simple AI chatbot that categorises questions based on different tags relating to finance - providing an automated template response telling a user where to contact for answers
+to their query. The AI uses a relatively small dataset (though it is built to accept and work with other datasets) composed of 500 stack overflow finance questions - downloaded using the stackoverflow API. A portion of these are then used as
+training data, and some as testing data. When finished, the bot often reports around a 75% success rate on matching topics using the default method - though other algorithms can be enabled in the source code.
 <br><br>
 <button onclick="location.href='https://github.com/JaVonox/AIChatbot'" style="position:relative;"> Github Link </button>
 <br><br>
