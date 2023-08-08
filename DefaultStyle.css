@@ -5,10 +5,15 @@
 {
 	font-family:'Montserrat', sans-serif;
 }
-h1,h2,h3,h4,h5
+h1
 {
 	font-family: 'Playfair Display', sans-serif;
-	color: #05DC8D;
+	color: #037f52;
+}
+h2,h3,h4,h5
+{
+	font-family: 'Playfair Display', sans-serif;
+	color: #04B172;
 }
 
 
@@ -54,4 +59,15 @@ button:hover
 	margin:auto;
 	padding-left:50px;
 	padding-right:50px;
+}
+
+div.sticky {
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	padding: 5px;
+	border:none;
+	border-radius: 12px;
+	background-color: #cae8ca;
+	float:left;
 }
