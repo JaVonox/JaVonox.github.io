@@ -1,5 +1,6 @@
 @import url('https://fonts.cdnfonts.com/css/montserrat');
 @import url('https://fonts.cdnfonts.com/css/playfair-display');
+@import url('https://fonts.cdnfonts.com/css/arvo');
 *
 {
 	font-family:'Montserrat', sans-serif;
@@ -7,4 +8,50 @@
 h1,h2,h3,h4,h5
 {
 	font-family: 'Playfair Display', sans-serif;
+	color: #05DC8D;
+}
+
+
+button
+{
+	font-family: 'Arvo', sans-serif;
+	background-color: #04AA6D;
+	border: none;
+	color: white;
+	padding: 15px;
+	text-align: center;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	border-radius: 12px;
+}
+button:hover 
+{
+	background-color: #026a44;
+}
+
+.imageNav
+{
+	background-color:#dcdcdc;
+	border-radius:0px;
+	padding:0px;
+	width:32px;
+	height:32px;
+	margin:0px 0px;
+	color:black;
+}
+.imageNav:hover
+{
+	background-color: #cecece;
+}
+
+.midbox
+{
+	background-color:white;
+	box-sizing:border-box;
+	text-align:center;
+	width:60vw;
+	margin:auto;
+	padding-left:50px;
+	padding-right:50px;
 }

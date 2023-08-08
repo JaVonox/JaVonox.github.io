@@ -2,23 +2,13 @@
 <html>
 <head>
 <title> Jamie Gorman's Portfolio - BankBot </title>
-<link rel="stylesheet" type="text/css" href="DefaultStyle.css">
+<link rel="stylesheet" type="text/css" href="../../DefaultStyle.css">
 </head>
 <style>
 	html
 	{
-		background-image:url('../../TemplateImage.png');
-		background-attachment:fixed;
-	}
-	.midbox
-	{
-		background-color:white;
-		box-sizing:border-box;
-		text-align:center;
-		width:60vw;
-		margin:auto;
-		padding-left:50px;
-		padding-right:50px;
+		background-image:url('../../StarsImage.png');
+		background-attachment:scroll;
 	}
 </style>
 <script src="../../Scripts/SlideshowScript.js"></script>
@@ -28,9 +18,9 @@
 <div style="width:800px;object-fit:scale-down;background-color:#b3b0a8;opacity:1;margin:auto;border-style:ridge;"/>
 <img id="SlideshowBox" src="Slideshow/0.png" style="width:800px;height:550px;object-fit:scale-down;background-color:#b3b0a8;opacity:1;"/>
 <div style="width:100%;background-color:white;height:32px;">
-<button onclick="_PrevImage()" style="float:left;width:32px;height:32px;"> < </button>
+<button onclick="_PrevImage()" style="float:left;width:32px;height:32px;"class="imageNav"> < </button>
 <txt id="descbox">Description couldnt be loaded - please refresh the page</txt>
-<button onclick="_NextImage()" style="float:right;width:32px;height:32px;"> > </button>
+<button onclick="_NextImage()" style="float:right;width:32px;height:32px;"class="imageNav"> > </button>
 </div>
 </div>
 <br>
