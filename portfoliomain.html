@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="DefaultStyle.css">
 <title> Jamie Gorman's Portfolio - Main Page </title>
 </head>
 <style>
@@ -19,42 +20,48 @@
 		padding-left:50px;
 		padding-right:50px;
 	}
+	.portfolioImageContent
+	{
+		width:100%;
+		height:100%;
+		object-fit:scale-down;
+	}
 </style>
 <body style="margin:0;padding:0;">
 <div class="midbox">
-<h1>Who am I?</h1>
-<img src="JamieGorman.png" style="width:160px;height:160px;"/>
+<h1 style="font-size:48px;">Who am I?</h1>
+<img src="JamieGorman.png" class="portfolioImageContent" style="max-width:160px;max-height:160px"/>
 <br><br>
 Hey, my name is Jamie Gorman, I'm a software developer from Birmingham, England. I've been interested in software development since I was a child, starting with actionscript as my first language at the age of 12.
 Nowadays, I prefer to use languages like C# and python, but I pride myself on my ability to work with any language. I Recently completed my bachelors degree in computer science, resulting in a first class honours and two additional awards.
 In my free time, I like to make my own games and simulations, some of which are listed below!
 <h1>Projects Overview</h1>
 <h2>Single Simulator</h2>
-<img src="SingleSimulatorPreview.png" style="height:320px;width:480px;"/>
+<img src="SingleSimulatorPreview.png" class="portfolioImageContent"/>
 <br><br>
 A parody of "Signal Simulator"-esque games - work as a new transfer to the signals department of an intergalatic dating website - matching up aliens on dates.
 <br><br>
 <button onclick="location.href='Projects/SingleSimulator/SingleSim.html'" style="position:relative;"> See More </button>
 <h2>Juris-Civilis</h2>
-<img src="JurisCivilisPreview.png" style="height:320px;width:480px;"/>
+<img src="JurisCivilisPreview.png" class="portfolioImageContent"/>
 <br><br>
 An automatic world simulator with world generation and AI nations.
 <br><br>
 <button onclick="location.href='Projects/JurisCivilis/JurisCivilis.html'" style="position:relative;"> See More </button>
 <h2>Tauresium</h2>
-<img src="TauresiumPreview.png" style="height:320px;width:480px;"/>
+<img src="TauresiumPreview.png" class="portfolioImageContent"/>
 <br><br>
 A multiplayer online game website, inwhich players create custom nations and compete with one another to take over the world.
 <br><br>
 <button onclick="location.href='Projects/Tauresium/Tauresium.html'" style="position:relative;"> See More </button>
 <h2>:C</h2>
-<img src="ColonCPreview.png" style="height:320px;width:480px;"/>
-<br><br>
+<img src="ColonCPreview.png" class="portfolioImageContent"/>
+<br>
 A lightweight custom programming language designed to be simple yet expansive.
 <br><br>
 <button onclick="location.href='Projects/ColonC/ColonC.html'" style="position:relative;"> See More </button>
 <h2>Bankbot</h2>
-<img src="AIPreview.png" style="height:320px;width:480px;height:58px;"/>
+<img src="AIPreview.png" class="portfolioImageContent" style="height:58px;"/>
 <br><br>
 A basic chatbot AI using stackoverflow questions to categorise user inputs into various finance related topics.
 <br><br>
