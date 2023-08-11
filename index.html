@@ -54,17 +54,17 @@ var t;
 
 var started = false; //Checks if this is the first run of the system
 
-if(isMobile()) //Polygons are only loaded on 
-{
-	console.log("Loading mobile mode");
-	document.getElementById("backing").style.backgroundImage = "url(MobilePolygons.png)";
-	document.getElementById("backing").style.backgroundSize = "cover"; 
-	t = null;
-}
-else
-{
+//if(isMobile()) //Polygons are only loaded on 
+//{
+//	console.log("Loading mobile mode");
+//	document.getElementById("backing").style.backgroundImage = "url(MobilePolygons.png)";
+//	document.getElementById("backing").style.backgroundSize = "cover"; 
+//	t = null;
+//}
+//else
+//{
 	t = setInterval(_Run,60); //Run every 60ms
-}
+//}
 
 function isMobile() //Checks if user is on pc or mobile
 {	
