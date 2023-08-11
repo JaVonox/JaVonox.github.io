@@ -50,12 +50,34 @@ var polcounter = 1; //Counts up indexes
 const bottom = document.getElementById("backing").offsetHeight;
 const right = document.getElementById("backing").offsetWidth;
 
-var t=setInterval(_Run,60); //Run every 60ms
+var t;
 
 var started = false; //Checks if this is the first run of the system
 
+if(isMobile()) //Polygons are only loaded on 
+{
+	console.log("Loading mobile mode");
+	document.getElementById("backing").style.backgroundImage = "url(MobilePolygons.png)";
+	document.getElementById("backing").style.backgroundSize = "cover"; 
+	t = null;
+}
+else
+{
+	t = setInterval(_Run,60); //Run every 60ms
+}
 
-//TODO maybe switch pointsType to just use vector type? this type was added before vector math was even a concern
+function isMobile() //Checks if user is on pc or mobile
+{	
+	if(navigator.userAgentData.mobile){ //Immediate check for the userAgentData. This may not work unless https is used so it just functions as a first check
+		console.log("userAgentData mobile");
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}
 function pointsType(xN,yN){ //Point reference type - points stored as x and y values
 	this.x = xN;
 	this.y = yN;
