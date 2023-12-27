@@ -61,6 +61,7 @@ button:hover
 	padding-left:50px;
 	padding-right:50px;
 	min-width:min-content;
+	border-radius:10px;
 }
 
 div.sticky {
