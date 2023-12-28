@@ -33,13 +33,30 @@
 	}
 </style>
 <body style="margin:0;padding:0;">
-<svg id="polybox" style="z-index:2;position:absolute;width:100%;height:100%;">
+<seg id="desktopSeg" style="display:auto;">
+<svg id="polybox" style="z-index:2;position:absolute;width:100dvw;height:100dvh;">
 </svg>
 <div id="backing" class="backbox" style="">
 <text style="color:#04B172;font-size:48px;"> Jamie Gorman's Portfolio </text>
 <br><br>
 <button onclick="location.href='portfoliomain.html'" style="z-index:3;position:relative;font-size:32px;"> Enter </button>
 </div>
+</seg>
+
+<seg id="mobileSeg">
+<div style="background-image:url(MobilePolygons.png);width:100dvw;height:100dvh;position:absolute;">
+<div class="midbox" style="z-index:3;position:relative;margin-top:35dvh;">
+<br>
+<text style="color:#04B172;font-size:64px;"> Jamie Gorman's Portfolio </text>
+<br><br>
+<text style="font-size:32px;"> Note: This website isnt yet optimised for mobile use. Some features may not yet function as intended. </text>
+<br><br><br>
+<button onclick="location.href='portfoliomain.html'" style="z-index:3;position:relative;font-size:64px;"> Enter </button>
+</div>
+
+</div>
+</seg>
+
 </body>
 
 <script>
@@ -54,30 +71,35 @@ var t;
 
 var started = false; //Checks if this is the first run of the system
 
-//if(isMobile()) //Polygons are only loaded on 
-//{
-//	console.log("Loading mobile mode");
-//	document.getElementById("backing").style.backgroundImage = "url(MobilePolygons.png)";
-//	document.getElementById("backing").style.backgroundSize = "cover"; 
-//	t = null;
-//}
-//else
-//{
+if(isMobile()) //Polygons are only loaded on 
+{
+	console.log("Loading mobile mode");
+	//document.getElementById("backing").style.backgroundImage = "url(MobilePolygons.png)";
+	//document.getElementById("backing").style.backgroundSize = "100% 100% contain"; 
+	t = null;
+}
+else
+{
 	t = setInterval(_Run,60); //Run every 60ms
-//}
+}
 
 function isMobile() //Checks if user is on pc or mobile
 {	
-	if(navigator.userAgentData.mobile){ //Immediate check for the userAgentData. This may not work unless https is used so it just functions as a first check
-		console.log("userAgentData mobile");
+	//Check for useragent data
+	if(navigator.userAgentData.mobile || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ 
+		document.getElementById("desktopSeg").style.display = "none";
+		document.getElementById("mobileSeg").style.display = "auto";
 		return true;
 	}
 	else
 	{
+		document.getElementById("desktopSeg").style.display = "auto";
+		document.getElementById("mobileSeg").style.display = "none";
 		return false;
 	}
 	
 }
+
 function pointsType(xN,yN){ //Point reference type - points stored as x and y values
 	this.x = xN;
 	this.y = yN;
