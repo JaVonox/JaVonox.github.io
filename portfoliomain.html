@@ -39,14 +39,6 @@
 	seg
 	{
 	}
-	.dropHeader
-	{
-		cursor:pointer;
-	}
-	.dropHeader:hover
-	{
-		color: #05ca82;
-	}
 </style>
 <body style="margin:0;padding:0;">
 <div class="sticky">
@@ -56,10 +48,19 @@
 <a href="mailto:jamiebbgorman@gmail.com"target="_blank"><img src="MailIcon.png" style="height:64px;width:64px;"></img></a>
 </div>
 
+<div id="RightConstellation" style="margin:0;padding:0;width:128px;height:128px;position:fixed;bottom:45vh;right:10vw;background-image:url(Icons/ConsSingleSim.png);">
+</div>
+
+<div id="LeftConstellation" style="margin:0;padding:0;width:128px;height:128px;position:fixed;bottom:45vh;left:10vw;background-image:url(Icons/ConsSingleSim.png);">
+</div>
+
+<div id="Sensor" style="margin:0;padding:0;width:10px;height:10px;position:fixed;bottom:50vh;left:50vw;background-color:purple;opacity:0">
+</div>
+
 <div class="midbox">
 <br><br>
 <h2 style="font-size:48px;margin:0;">Jamie Gorman's Portfolio</h2>
-<h1 onclick="ToggleTab(0)" class="dropHeader" id="OutlineBtn">Outline ▼</h1>
+<h1 class="dropHeader" id="OutlineBtn">Outline</h1>
 <seg id="QualSeg">
 <h3>Qualifications and Awards</h3>
 <b>Bachelors of Computer Science - First Class Honours</b>
@@ -119,10 +120,10 @@ Game Modding
 </table>
 </seg>
 
-<h1 onclick="ToggleTab(1)" class="dropHeader" id="PortButton">Portfolio ▼</h1>
+<h1 id="PortButton">Portfolio</h1>
 <seg id="PortSeg">
 <h2>Single Simulator</h2>
-<img src="SingleSimulatorPreview.png" class="portfolioImageContent"/>
+<img id="SigImg" src="SingleSimulatorPreview.png" class="portfolioImageContent"/>
 <br>
 <img src="icons/CsharpIcon.png"/>
 <img src="icons/UnityIcon.png"/>
@@ -131,7 +132,7 @@ A parody of "Signal Simulator"-esque games - work as a new transfer to the signa
 <br><br>
 <button onclick="location.href='Projects/SingleSimulator/SingleSim.html'" style="position:relative;"> See More </button>
 <h2>Juris-Civilis</h2>
-<img src="JurisCivilisPreview.png" class="portfolioImageContent"/>
+<img id="JurImg" src="JurisCivilisPreview.png" class="portfolioImageContent"/>
 <br>
 <img src="icons/CsharpIcon.png"/>
 <img src="icons/UnityIcon.png"/>
@@ -140,7 +141,7 @@ An automatic world simulator with world generation and AI nations.
 <br><br>
 <button onclick="location.href='Projects/JurisCivilis/JurisCivilis.html'" style="position:relative;"> See More </button>
 <h2>Pumpkin Panic</h2>
-<img src="VsPumpkinsPreview.png" class="portfolioImageContent"/>
+<img id="PumpImg" src="VsPumpkinsPreview.png" class="portfolioImageContent"/>
 <br>
 <img src="icons/CsharpIcon.png"/>
 <img src="icons/UnityIcon.png"/>
@@ -152,7 +153,7 @@ A player vs player survival minigame where two players fight back against a wave
 <br><br>
 <button onclick="location.href='Projects/GardenersVsPumpkins/GardenerVsPumpkins.html'" style="position:relative;"> See More </button>
 <h2>Tauresium</h2>
-<img src="TauresiumPreview.png" class="portfolioImageContent"/>
+<img id="TaurImg" src="TauresiumPreview.png" class="portfolioImageContent"/>
 <br>
 <img src="icons/PHPIcon.png"/>
 <img src="icons/JSIcon.png"/>
@@ -161,7 +162,7 @@ A multiplayer online game website, inwhich players create custom nations and com
 <br><br>
 <button onclick="location.href='Projects/Tauresium/Tauresium.html'" style="position:relative;"> See More </button>
 <h2>:C</h2>
-<img src="ColonCPreview.png" class="portfolioImageContent"/>
+<img id="CImg" src="ColonCPreview.png" class="portfolioImageContent"/>
 <br>
 <img src="icons/CsharpIcon.png"/>
 <br><br>
@@ -169,7 +170,7 @@ A lightweight custom programming language designed to be simple yet expansive.
 <br><br>
 <button onclick="location.href='Projects/ColonC/ColonC.html'" style="position:relative;"> See More </button>
 <h2>Bankbot</h2>
-<img src="AIPreview.png" class="portfolioImageContent" style="height:58px;"/>
+<img id="AIImg" src="AIPreview.png" class="portfolioImageContent" style="height:58px;"/>
 <br>
 <img src="icons/PythonIcon.png"/>
 <br><br>
@@ -179,7 +180,7 @@ A basic chatbot AI using stackoverflow questions to categorise user inputs into 
 <br><br>
 </seg>
 
-<h1 onclick="ToggleTab(2)" class="dropHeader" id="WhoButton">Who am I? ▼</h1>
+<h1 id="WhoButton">Who am I?</h1>
 <seg id="WhoSeg">
 <img src="JamieGorman.png" class="portfolioImageContent" style="max-width:160px;max-height:160px"/>
 <br><br>
@@ -200,66 +201,107 @@ var qualSegOpen = false;
 var portSegOpen = false;
 var whoSegOpen = false;
 
+imageBounds = []; //Stores the top Y for each image in order to show the constellations where appropriate
+
 Load();
+
+document.addEventListener("scroll", (event) => {
+	CheckOverlap();
+});
 
 function Load()
 {
-	for(let i = 0;i < 3;i++)
-	{
-		ToggleTab(i);
-	}
+	document.getElementById("RightConstellation").style.opacity = "0";
+	document.getElementById("LeftConstellation").style.opacity = "0";
+	
+	var wScroll = window.scrollY;
+
+	//Store the Y coord of each image
+	imageBounds[0] = document.getElementById("SigImg").getBoundingClientRect().top + wScroll; 
+	imageBounds[1] = document.getElementById("JurImg").getBoundingClientRect().top + wScroll; 
+	imageBounds[2] = document.getElementById("PumpImg").getBoundingClientRect().top + wScroll; 
+	imageBounds[3] = document.getElementById("TaurImg").getBoundingClientRect().top + wScroll; 
+	imageBounds[4] = document.getElementById("CImg").getBoundingClientRect().top + wScroll; 
+	imageBounds[5] = document.getElementById("AIImg").getBoundingClientRect().top + wScroll; 
+	
+	console.log(imageBounds);
 }
 
 
+const imageOffset = 50; //Offset to include title
+const outerOffset = 500; //Offset to include the bottom section
 
-function ToggleTab(segIndex)
+function CheckOverlap() {
+	var centreYPos = document.getElementById("Sensor").getBoundingClientRect().top + window.scrollY;
+	
+	if(centreYPos < imageBounds[5] + outerOffset)
+	{
+		if(centreYPos > imageBounds[5]) //Bankbot Section
+		{
+			document.getElementById("RightConstellation").style.opacity = "0";
+			document.getElementById("LeftConstellation").style.opacity = "1";
+			
+			SetImage("LeftConstellation","ConsAI");
+		}
+		else if(centreYPos > imageBounds[4]) //:C Section
+		{
+			document.getElementById("RightConstellation").style.opacity = "1";
+			document.getElementById("LeftConstellation").style.opacity = "0";
+			
+			SetImage("RightConstellation","ConsColonC");
+		}
+		else if(centreYPos > imageBounds[3]) //Tauresium Section
+		{
+			document.getElementById("RightConstellation").style.opacity = "0";
+			document.getElementById("LeftConstellation").style.opacity = "1";
+			
+			SetImage("LeftConstellation","ConsTauresium");
+		}
+		else if(centreYPos > imageBounds[2]) //Pumpkin Panic Section
+		{
+			document.getElementById("RightConstellation").style.opacity = "1";
+			document.getElementById("LeftConstellation").style.opacity = "0";
+			
+			SetImage("RightConstellation","ConsPumpkin");
+		}
+		else if(centreYPos > imageBounds[1]) //Juris Civilis Section
+		{
+			document.getElementById("RightConstellation").style.opacity = "0";
+			document.getElementById("LeftConstellation").style.opacity = "1";
+			
+			SetImage("LeftConstellation","ConsJuris");
+		}
+		else if(centreYPos > imageBounds[0]) //Single Sim Section 
+		{
+			document.getElementById("RightConstellation").style.opacity = "1";
+			document.getElementById("LeftConstellation").style.opacity = "0";
+			
+			SetImage("RightConstellation","ConsSingleSim");
+		}
+		else //Outside Section
+		{
+			document.getElementById("RightConstellation").style.opacity = "0";
+			document.getElementById("LeftConstellation").style.opacity = "0";
+		}
+	}
+	else //Outside Section
+	{
+		document.getElementById("RightConstellation").style.opacity = "0";
+		document.getElementById("LeftConstellation").style.opacity = "0";
+	}
+
+}
+
+function SetImage(imgSrc,setPath) //Changes the constellation image if required
 {
-	switch(segIndex)
+	
+	if(document.getElementById(imgSrc).style.backgroundImage != "url('Icons/'" + setPath + "'.png')")
 	{
-		case 0:
-				if(qualSegOpen)
-				{
-					document.getElementById("QualSeg").style.display = "none";
-					document.getElementById("OutlineBtn").innerHTML = "Outline ▲";
-				}
-				else
-				{
-					document.getElementById("QualSeg").style.display = "block";
-					document.getElementById("OutlineBtn").innerHTML = "Outline ▼";
-				}
-				
-				qualSegOpen = !qualSegOpen;
-				break;
-		case 1:
-				if(portSegOpen)
-				{
-					document.getElementById("PortSeg").style.display = "none";
-					document.getElementById("PortButton").innerHTML = "Portfolio ▲";
-				}
-				else
-				{
-					document.getElementById("PortSeg").style.display = "block";
-					document.getElementById("PortButton").innerHTML = "Portfolio ▼";
-				}
-				
-				portSegOpen = !portSegOpen;
-				break;
-		case 2:
-				if(whoSegOpen)
-				{
-					document.getElementById("WhoSeg").style.display = "none";
-					document.getElementById("WhoButton").innerHTML = "Who am I? ▲";
-				}
-				else
-				{
-					document.getElementById("WhoSeg").style.display = "block";
-					document.getElementById("WhoButton").innerHTML = "Who am I? ▼";
-				}
-				
-				whoSegOpen = !whoSegOpen;
-				break;
+		document.getElementById(imgSrc).style.backgroundImage = "url(Icons/" + setPath + ".png)";
 	}
 }
+
+
 
 </script>
 </html>
