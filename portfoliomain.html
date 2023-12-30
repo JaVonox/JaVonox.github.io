@@ -203,11 +203,13 @@ var whoSegOpen = false;
 
 imageBounds = []; //Stores the top Y for each image in order to show the constellations where appropriate
 
-Load();
-
 document.addEventListener("scroll", (event) => {
 	CheckOverlap();
 });
+
+window.addEventListener('load', function () {
+  Load();
+})
 
 function Load()
 {
@@ -223,57 +225,71 @@ function Load()
 	imageBounds[3] = document.getElementById("TaurImg").getBoundingClientRect().top + wScroll; 
 	imageBounds[4] = document.getElementById("CImg").getBoundingClientRect().top + wScroll; 
 	imageBounds[5] = document.getElementById("AIImg").getBoundingClientRect().top + wScroll; 
-	
-	console.log(imageBounds);
+
 }
 
 
 const imageOffset = 50; //Offset to include title
-const outerOffset = 500; //Offset to include the bottom section
+const outerOffset = 400; //Offset to include the bottom section
 
 function CheckOverlap() {
 	var centreYPos = document.getElementById("Sensor").getBoundingClientRect().top + window.scrollY;
+	
+	var normalisedOffset = 0;
 	
 	if(centreYPos < imageBounds[5] + outerOffset)
 	{
 		if(centreYPos > imageBounds[5]) //Bankbot Section
 		{
+			normalisedOffset = GetOpacityFromOffset(centreYPos,imageBounds[5],imageBounds[5]+outerOffset);
+			
 			document.getElementById("RightConstellation").style.opacity = "0";
-			document.getElementById("LeftConstellation").style.opacity = "1";
+			document.getElementById("LeftConstellation").style.opacity = normalisedOffset;
 			
 			SetImage("LeftConstellation","ConsAI");
 		}
 		else if(centreYPos > imageBounds[4]) //:C Section
 		{
-			document.getElementById("RightConstellation").style.opacity = "1";
+			normalisedOffset = GetOpacityFromOffset(centreYPos,imageBounds[4],imageBounds[5]);
+			
+			document.getElementById("RightConstellation").style.opacity = normalisedOffset;
 			document.getElementById("LeftConstellation").style.opacity = "0";
 			
 			SetImage("RightConstellation","ConsColonC");
+
 		}
 		else if(centreYPos > imageBounds[3]) //Tauresium Section
 		{
+			normalisedOffset = GetOpacityFromOffset(centreYPos,imageBounds[3],imageBounds[4]);
+						
 			document.getElementById("RightConstellation").style.opacity = "0";
-			document.getElementById("LeftConstellation").style.opacity = "1";
+			document.getElementById("LeftConstellation").style.opacity = normalisedOffset;
 			
 			SetImage("LeftConstellation","ConsTauresium");
 		}
 		else if(centreYPos > imageBounds[2]) //Pumpkin Panic Section
 		{
-			document.getElementById("RightConstellation").style.opacity = "1";
+			normalisedOffset = GetOpacityFromOffset(centreYPos,imageBounds[2],imageBounds[3]);
+			
+			document.getElementById("RightConstellation").style.opacity = normalisedOffset;
 			document.getElementById("LeftConstellation").style.opacity = "0";
 			
 			SetImage("RightConstellation","ConsPumpkin");
 		}
 		else if(centreYPos > imageBounds[1]) //Juris Civilis Section
 		{
+			normalisedOffset = GetOpacityFromOffset(centreYPos,imageBounds[1],imageBounds[2]);
+			
 			document.getElementById("RightConstellation").style.opacity = "0";
-			document.getElementById("LeftConstellation").style.opacity = "1";
+			document.getElementById("LeftConstellation").style.opacity = normalisedOffset;
 			
 			SetImage("LeftConstellation","ConsJuris");
 		}
 		else if(centreYPos > imageBounds[0]) //Single Sim Section 
 		{
-			document.getElementById("RightConstellation").style.opacity = "1";
+			normalisedOffset = GetOpacityFromOffset(centreYPos,imageBounds[0],imageBounds[1]);
+			
+			document.getElementById("RightConstellation").style.opacity = normalisedOffset;
 			document.getElementById("LeftConstellation").style.opacity = "0";
 			
 			SetImage("RightConstellation","ConsSingleSim");
@@ -301,7 +317,31 @@ function SetImage(imgSrc,setPath) //Changes the constellation image if required
 	}
 }
 
+const opacityBounds = 0.3;
 
+function GetOpacityFromOffset(currentPos,startPos,nextPos) //Checks how far through the user is through a section and converts it to an opacity value
+{
+	
+	var opacityValue = (currentPos - startPos) / (nextPos-startPos); //Starts with a normalised value
+	
+	//Makes the opacity go up and down towards the opacity bounds
+	
+	if(opacityValue < opacityBounds)
+	{
+		opacityValue = (opacityValue / opacityBounds);
+	}
+	else if(opacityValue < (1-opacityBounds))
+	{
+		opacityValue = 1;
+	}
+	else
+	{
+		opacityValue = Math.max(0,1- Math.abs((opacityBounds*10 - 1)-(opacityValue / opacityBounds)));
+		
+	}
+	
+	return opacityValue;
+}
 
 </script>
 </html>
